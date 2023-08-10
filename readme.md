@@ -1,6 +1,6 @@
 ## Python Web API project
 
-In this repo I am learning Web API technology with FASTAPI \
+In this repo I am learning Web API technology with FASTAPI. \
 I am following a beautiful tutorial [here](https://www.youtube.com/watch?v=0sOvCWFmrtA&t=8474s). \
 And you can find author's repo [here](https://github.com/Sanjeev-Thiyagarajan/fastapi-course). 
 
