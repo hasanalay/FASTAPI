@@ -9,7 +9,8 @@ And you can find author's repo [here](https://github.com/Sanjeev-Thiyagarajan/fa
 Type ```python3 -m venv <name>``` in your terminal to create an environment. \
 Then activate it by this command. ```source <venv_name> bin activate```
 - Make sure you have all the modules in the requirements.txt file in your virtual environment \
-Type and run ```uvicorn app.main:app --reload``` in the terminal. \
+- Run the PostgreSQL server. And make sure The db is correct for this project.
+- Type and run ```uvicorn app.main:app --reload``` in the terminal. \
 Here is your API is now running in your local environment.
 
 
@@ -22,3 +23,5 @@ To go documentation there are two ways:
 - type /redoc after the base url.
 
 ### Other Sections are coming soon!
+### **My Notes**
+- The repo is now developing with DB first approach. In Branch: feature-database. 
