@@ -1,23 +1,16 @@
 import time
 from fastapi import Body, Depends, FastAPI, Response, status, HTTPException
 from httpx import post
-from pydantic import BaseModel 
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from sqlalchemy.orm import Session
 from .database import engine, get_db
-from . import models
+from . import models, schemas
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# region Models
-class Post(BaseModel):
-    Title: str
-    Content: str
-    Published: bool = True
-# endregion
 # region Db Connection
 # Connection to PostgreSQL DB
 while True:
@@ -31,6 +24,7 @@ while True:
         time.sleep(2)
 # endregion
 #region Requests
+
 @app.get("/")
 def root():
     return {"message": "Hello World this is initial page for the FastAPI."}
@@ -49,7 +43,7 @@ def get_post_by_id(id: int, db: Session = Depends(get_db)):
     return {"Data": post}
 
 @app.post("/posts/create", status_code=status.HTTP_201_CREATED)
-def create_post(post: Post, db: Session = Depends(get_db)):
+def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
     new_post = models.Post(**post.model_dump())
     db.add(new_post)
     db.commit()
@@ -66,7 +60,7 @@ def delete_post(id: int, db: Session = Depends(get_db)):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 @app.put("/posts/update/{id}", status_code=status.HTTP_202_ACCEPTED)
-def update_post(id: int, updated_post: Post, db: Session = Depends(get_db)):
+def update_post(id: int, updated_post: schemas.PostCreate, db: Session = Depends(get_db)):
     post_query = db.query(models.Post).filter(models.Post.Id == id)
     post = post_query.first()
     if post == None:
