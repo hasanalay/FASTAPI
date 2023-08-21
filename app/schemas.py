@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel, EmailStr 
 # region  Input Models
 # This our input tables model and we use inheritence here.
@@ -17,6 +18,10 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     pass
+# for login
+class UserLogin(BaseModel):
+    Email: EmailStr
+    Password: str
 # endregion
 
 # region Response Models
@@ -37,3 +42,10 @@ class UserOutput(BaseModel):
         from_attributes = True
 
 #endregion
+
+class Token(BaseModel):
+    Access_token: str
+    Token_type: str
+    
+class TokenData(BaseModel):
+    Id: Optional[str] = None
