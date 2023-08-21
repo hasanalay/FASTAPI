@@ -44,8 +44,8 @@ class UserOutput(BaseModel):
 #endregion
 
 class Token(BaseModel):
-    Access_token: str
-    Token_type: str
+    access_token: str
+    token_type: str
     
 class TokenData(BaseModel):
     Id: Optional[str] = None
