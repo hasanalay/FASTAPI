@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import Depends, Response, status, HTTPException, APIRouter
-from .. import models, schemas
+from .. import models, schemas, oauth2
 from sqlalchemy.orm import Session
 from ..database import get_db
 
@@ -9,14 +9,14 @@ router = APIRouter(
     tags=["Posts"]
 )
 
-# region Post requests
-@router.get("/")
-def get_posts(db: Session = Depends(get_db), response_model=List[schemas.Post]):
+# region Post related requests
+@router.get("/", response_model=List[schemas.Post])
+def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     posts=db.query(models.Post).all()
     return posts
 
-@router.get("/{id}")
-def get_post_by_id(id: int, db: Session = Depends(get_db), response_model=schemas.Post):
+@router.get("/{id}", response_model=schemas.Post)
+def get_post_by_id(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     post=db.query(models.Post).filter(models.Post.Id == id).first()
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
@@ -24,7 +24,7 @@ def get_post_by_id(id: int, db: Session = Depends(get_db), response_model=schema
     return post
 
 @router.post("/create", status_code=status.HTTP_201_CREATED , response_model=schemas.Post)
-def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
+def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     new_post = models.Post(**post.model_dump())
     db.add(new_post)
     db.commit()
@@ -32,7 +32,7 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
     return new_post
 
 @router.delete("/delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int, db: Session = Depends(get_db)):
+def delete_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     deleted_post = db.query(models.Post).filter(models.Post.Id == id).delete(synchronize_session=False)
     db.commit()
     if not deleted_post:
@@ -41,13 +41,12 @@ def delete_post(id: int, db: Session = Depends(get_db)):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 @router.put("/update/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=schemas.Post)
-def update_post(id: int, updated_post: schemas.PostCreate, db: Session = Depends(get_db)):
+def update_post(id: int, updated_post: schemas.PostCreate, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     post_query = db.query(models.Post).filter(models.Post.Id == id)
     post = post_query.first()
     if post == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
-                            detail=f"Post with id: {id} was not found")
-        
+                            detail=f"Post with id: {id} was not found")    
     post_query.update(updated_post.model_dump(), synchronize_session=False)
     db.commit()
     return post_query.first()
