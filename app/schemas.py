@@ -29,6 +29,7 @@ class UserLogin(BaseModel):
 class Post(PostBase):
     Id: int 
     CreatedDate: datetime
+    owner_id: int
     
     class Config:
         from_attributes = True
