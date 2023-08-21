@@ -15,6 +15,11 @@ def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.
     posts=db.query(models.Post).all()
     return posts
 
+@router.get("/myPosts", response_model=List[schemas.Post])
+def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+    posts=db.query(models.Post).filter(models.Post.owner_id == current_user.Id).all()
+    return posts
+
 @router.get("/{id}", response_model=schemas.Post)
 def get_post_by_id(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):   
     post=db.query(models.Post).filter(models.Post.Id == id).first()
