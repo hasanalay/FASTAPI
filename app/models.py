@@ -22,4 +22,12 @@ class User(Base):
     Email = Column(String, nullable=False, unique=True)
     Password = Column(String, nullable=False)
     CreatedDate = Column(TIMESTAMP(timezone=True),server_default=text('now()'), nullable=False)
+    
+class Like(Base):
+    __tablename__ = "tblLikes"
+    
+    UserId = Column(Integer, ForeignKey("tblUsers.Id", ondelete="CASCADE"), primary_key=True)    
+    PostId = Column(Integer, ForeignKey("tblPosts.Id", ondelete="CASCADE"), primary_key=True)
+    
+    #post = relationship("Post")
 #endregion

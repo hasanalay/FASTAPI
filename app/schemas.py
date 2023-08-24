@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional, Type
-from pydantic import BaseModel, EmailStr 
+from pydantic import BaseModel, EmailStr, conint 
 # region  Input Models
 # This our input tables model and we use inheritence here.
 #for posts
@@ -49,3 +49,7 @@ class Token(BaseModel):
     
 class TokenData(BaseModel):
     Id: Optional[str] = None
+    
+class Like(BaseModel):
+    post_id: int
+    dir: conint(le=1)
