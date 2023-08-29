@@ -38,9 +38,16 @@ class Post(PostBase):
     CreatedDate: datetime
     owner_id: int
     owner: UserOutput
+    
     class Config:
         from_attributes = True
 
+class PostOutput(BaseModel):
+    Post: Post
+    Likes: int
+    
+    class Config:
+        from_attributes = True
 #endregion
 
 class Token(BaseModel):
