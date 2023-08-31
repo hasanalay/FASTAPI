@@ -10,7 +10,7 @@ router = APIRouter(
 )
 # region User requests
 
-@router.get("/", response_model=List[schemas.UserOutput])
+@router.get("", response_model=List[schemas.UserOutput])
 def get_posts(db: Session = Depends(get_db)):
     users=db.query(models.User).all()
     return users

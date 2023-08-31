@@ -7,7 +7,7 @@ router = APIRouter(
     tags=["Likes"]
 )
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("", status_code=status.HTTP_201_CREATED)
 def like_post(like: schemas.Like, db:Session = Depends(database.get_db), current_user: int = Depends(oauth2.get_current_user)):
     
     post = db.query(models.Post).filter(models.Post.Id == like.post_id).first()

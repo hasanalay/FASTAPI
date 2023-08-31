@@ -11,16 +11,22 @@ router = APIRouter(
 )
 
 # region Post related requests
-@router.get("/", response_model=List[schemas.PostOutput])
+@router.get("", response_model=List[schemas.PostOutput])
 def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
     #posts=db.query(models.Post).filter(models.Post.Title.contains(search)).limit(limit).offset(skip).all()
     posts = db.query(models.Post, func.count(models.Like.PostId).label('Likes')).outerjoin(models.Like, models.Post.Id == models.Like.PostId).group_by(models.Post.Id).filter(models.Post.Title.contains(search)).limit(limit).offset(skip).all()
+    if not posts:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
+                            detail=f"No posts were found")
     return posts
 
 @router.get("/myPosts", response_model=List[schemas.PostOutput])
 def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
     #posts=db.query(models.Post).filter(models.Post.owner_id == current_user.Id, models.Post.Title.contains(search)).limit(limit).offset(skip).all()
     posts = db.query(models.Post, func.count(models.Like.PostId).label('Likes')).outerjoin(models.Like, models.Post.Id == models.Like.PostId).group_by(models.Post.Id).filter(models.Post.owner_id == current_user.Id, models.Post.Title.contains(search)).limit(limit).offset(skip).all()
+    if not posts:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
+                            detail=f"No posts were found")
     return posts
 
 @router.get("/{id}", response_model=schemas.PostOutput)
