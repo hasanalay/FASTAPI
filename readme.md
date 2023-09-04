@@ -23,7 +23,3 @@ To go documentation there are two ways:
 - type /redoc after the base url.
 
 ### Other Sections are coming soon!
-### **My Notes**
-- The repo is now developing with DB first approach. In Branch: feature-database. \
-  **UPDATE** with the feature-orm branch I added orm functionality and removed hard coded db scripts. Also switched to Input/Output model for handling requests and responses
-- At this commit I cannot use aouto documentation functionalities. I will solve later.
