@@ -17,7 +17,7 @@ Here is your API is now running in your local environment.
 
 
 ### Documentation
-![image](./api_doc.png)
+![image](./api_docs.png)
 To go documentation there are two ways:
 - type /docs after the base url.
 - type /redoc after the base url.
